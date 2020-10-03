@@ -1,10 +1,16 @@
 monolog:
+    channels: [permission_action]
     handlers:
+        permission_action:
+            level: info
+            type: stream
+            path: '%kernel.logs_dir%/permission_action.log'
+            channels: permission_action
         main:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-            channels: ["!event"]
+            channels: ["!event", "!permission_action"]
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:

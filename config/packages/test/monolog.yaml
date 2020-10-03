@@ -1,11 +1,17 @@
 monolog:
+    channels: ["permission_action"]
     handlers:
+        permission_action:
+            level: error
+            type: stream
+            path: "%kernel.logs_dir%/permission_action.log"
+            channels: permission_action
         main:
             type: fingers_crossed
             action_level: error
             handler: nested
             excluded_http_codes: [404, 405]
-            channels: ["!event"]
+            channels: ["!event", "!permission_action"]
         nested:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
