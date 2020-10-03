@@ -11,6 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Vehicle|null findOneBy(array $criteria, array $orderBy = null)
  * @method Vehicle[]    findAll()
  * @method Vehicle[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Vehicle|null findOneByNumber(string $number)
  */
 class VehicleRepository extends ServiceEntityRepository
 {
