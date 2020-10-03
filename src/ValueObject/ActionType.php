@@ -2,7 +2,7 @@
 
 namespace App\ValueObject;
 
-use OutOfBoundsException;
+use App\Exception\OutOfBoundsException;
 
 final class ActionType
 {
