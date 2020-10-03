@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Vehicle;
 use App\Entity\Visit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,4 +49,21 @@ class VisitRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @param Vehicle $vehicle
+     * @return Visit|null
+     * @throws NonUniqueResultException
+     */
+    public function findLastOfVehicle(Vehicle $vehicle): ?Visit
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.vehicle = :vehicle')
+            ->setParameter('vehicle', $vehicle)
+            ->orderBy('v.created_at', 'DESC')
+            ->addOrderBy('v.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
