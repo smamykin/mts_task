@@ -29,3 +29,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Model\ActionPermissionFactory:
+        arguments:
+            $logger: '@monolog.logger.permission_action'
+    App\Controller\SimpleApiController:
+        arguments:
+            $logger: '@monolog.logger.permission_action'
