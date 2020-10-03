@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Exception\ExceptionInterface;
+use App\Model\ActionPermissionFactoryInterface;
 use App\Service\GateActionHandlerInterface;
 use App\Service\GatePermissionInterface;
 use App\ValueObject\ActionType;
@@ -38,13 +39,13 @@ class SimpleApiController extends AbstractController
      * )
      * @param $type
      * @param $vehicleNumber
-     * @param GatePermissionInterface $permission
+     * @param ActionPermissionFactoryInterface $factory
      * @return JsonResponse
      */
-    public function permission($type, $vehicleNumber, GatePermissionInterface $permission)
+    public function permission($type, $vehicleNumber, ActionPermissionFactoryInterface $factory)
     {
         try {
-            $result = $permission->has(new ActionType($type), $vehicleNumber);
+            $result = $factory->create(new ActionType($type))->has($vehicleNumber);
         } catch (ExceptionInterface $e) {
             return $this->json([
                 'payload' => ['message' => $e->getMessage(),],
