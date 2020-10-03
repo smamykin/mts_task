@@ -36,7 +36,7 @@ class SimpleApiTest extends WebTestCase
     {
         $vehicle = $this->getVehicleFixtureForPermissionTest($type, true);
 
-        $this->client->request('GET', "/permission/{$type}/{$vehicle->getNumber()}");
+        $this->client->request('GET', "/api-simple/v0.1/permission/{$type}/{$vehicle->getNumber()}");
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertSame($this->client->getResponse()->getContent(), json_encode(
@@ -57,15 +57,18 @@ class SimpleApiTest extends WebTestCase
     {
         $vehicle = $this->getVehicleFixtureForPermissionTest($type, false);
 
-        $this->client->request('GET', "/permission/{$type}/{$vehicle->getNumber()}");
+        $this->client->request('GET', "/api-simple/v0.1/permission/{$type}/{$vehicle->getNumber()}");
 
-        $this->assertResponseStatusCodeSame(204);
-        $this->assertSame($this->client->getResponse()->getContent(), json_encode([
-            'payload' => [
-                'type' => $type,
-                'permission' => false,
-            ],
-        ]));
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertSame(
+            json_encode([
+                'payload' => [
+                    'type' => $type,
+                    'permission' => false,
+                ],
+            ]),
+            $this->client->getResponse()->getContent()
+        );
     }
 
     /**
@@ -76,14 +79,13 @@ class SimpleApiTest extends WebTestCase
     {
         $vehicle = $this->getVehicleFixtureForAction($type);
 
-        $this->client->request('GET', "/action/{$type}/{$vehicle->getNumber()}");
+        $this->client->request('GET', "/api-simple/v0.1/action/{$type}/{$vehicle->getNumber()}");
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertSame($this->client->getResponse()->getContent(), json_encode([
             'payload' => [
                 'type' => $type,
                 'result' => true,
-                'errors' => [],
             ],
         ]));
     }
