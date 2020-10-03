@@ -20,7 +20,7 @@ class Visit
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="visits")
+     * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="visits", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $vehicle;
