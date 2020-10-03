@@ -2,6 +2,9 @@
 
 namespace App\Tests\functional;
 
+use App\DataFixtures\VehicleFixture;
+use App\Entity\Vehicle;
+use App\Entity\Visit;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 use Generator;
@@ -58,12 +61,12 @@ class RestApiTest extends WebTestCase
     }
 
     /**
-     * @param int $vehicleId
-     * @dataProvider providerVehicleId
+     * @param string $vehicleNumber
+     * @dataProvider providerVehicleNumbers
      */
-    public function testGetVehicle(int $vehicleId): void
+    public function testGetVehicle(string $vehicleNumber): void
     {
-        $vehicle = $this->em->getRepository(Vehicle::class)->find($vehicleId);
+        $vehicle = $this->em->getRepository(Vehicle::class)->findOneByNumber($vehicleNumber);
         $this->client->request('GET', "/vehicle/{$vehicle->getNumber()}");
 
         $this->assertResponseStatusCodeSame(200);
@@ -116,11 +119,10 @@ class RestApiTest extends WebTestCase
     }
 
     /**
-     * @depends \App\Tests\functional\RestApiTest::testPostVehicleVisit()
+     * @depends testPostVehicleVisit
      * @param Visit $visit
-     * @return Visit
      */
-    public function testPatchVehicleVisit(Visit $visit): Visit
+    public function testPatchVehicleVisit(Visit $visit): void
     {
         $vehicle = $this->getVehicleForVisitsTests();
         $now = new DateTimeImmutable();
@@ -147,13 +149,11 @@ class RestApiTest extends WebTestCase
         );
 
         $this->assertSame($now, $newVisit->getClosedAt());
-
-        return $visit;
     }
 
     public function testGetLastVisit()
     {
-        $vehicle = $this->getVehicleForLastVisitsTests();
+        $vehicle = $this->getVehicleForVisitsTests();
         $this->client->request('GET', "/vehicle/{$vehicle->getNumber()}/last-visit");
 
         $this->assertResponseStatusCodeSame(200);
@@ -169,16 +169,16 @@ class RestApiTest extends WebTestCase
     /**
      * @return Generator
      */
-    public function providerVehicleId(): Generator
+    public function providerVehicleNumbers(): Generator
     {
-        $vehicleIds = VehicleFixture::getVehicleIds();
-        if (count($vehicleIds) < self::GET_VEHICLE_SET_COUNT) {
+        $vehicleNumbers = VehicleFixture::getVehicleNumbers();
+        if (count($vehicleNumbers) < self::GET_VEHICLE_SET_COUNT) {
             throw new OutOfRangeException('Для теста не достаточно фикстур.');
         }
-        yield array_splice($vehicleIds, array_rand($vehicleIds),1)[0];
-        yield array_splice($vehicleIds, array_rand($vehicleIds),1)[0];
-        yield array_splice($vehicleIds, array_rand($vehicleIds),1)[0];
-        yield array_splice($vehicleIds, array_rand($vehicleIds),1)[0];
+        yield array_splice($vehicleNumbers, array_rand($vehicleNumbers),1);
+        yield array_splice($vehicleNumbers, array_rand($vehicleNumbers),1);
+        yield array_splice($vehicleNumbers, array_rand($vehicleNumbers),1);
+        yield array_splice($vehicleNumbers, array_rand($vehicleNumbers),1);
     }
 
     /**
@@ -209,13 +209,13 @@ class RestApiTest extends WebTestCase
     }
 
     /**
-     * @return array
+     * @return Vehicle
      */
-    private function getVehicleForVisitsTests(): array
+    private function getVehicleForVisitsTests(): Vehicle
     {
-        $vehicleId = VehicleFixture::getFirxtureIdForGetVehicleVisits();
+        $vehicleNumber = VehicleFixture::getFixtureIdForGetVehicleVisits();
 
-        return $this->em->getRepository(Vehicle::class)->find($vehicleId);
+        return $this->em->getRepository(Vehicle::class)->findOneByNumber($vehicleNumber);
     }
 
     private function getLastVisitOfVehicle($vehicle)
@@ -223,12 +223,5 @@ class RestApiTest extends WebTestCase
         return $this->em
             ->getRepository(Visit::class)
             ->findLastOfVehicle($vehicle);
-    }
-
-    private function getVehicleForLastVisitsTests()
-    {
-        $vehicleId = VehicleFixture::getFirxtureIdForGetVehicleLastVisit();
-
-        return $this->em->getRepository(Vehicle::class)->find($vehicleId);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Tests\functional;
 
+use App\DataFixtures\VehicleFixture;
+use App\Entity\Vehicle;
+use App\ValueObject\ActionType;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -42,7 +45,7 @@ class SimpleApiTest extends WebTestCase
                     'type' => $type,
                     'permission' => true,
                 ],
-            ],
+            ]
         ));
     }
 
@@ -87,7 +90,7 @@ class SimpleApiTest extends WebTestCase
 
     public function providerActionType(): array
     {
-        return ['in', 'out',];
+        return [['in'], ['out'],];
     }
 
     /**
@@ -99,6 +102,11 @@ class SimpleApiTest extends WebTestCase
     {
         return $this->em
             ->getRepository(Vehicle::class)
-            ->find(VehicleFixture::getVehicleIdByPermission(new ActionType($type), $hasPermission));
+            ->findOneByNumber(VehicleFixture::getVehicleNumbersByPermission(new ActionType($type), $hasPermission));
+    }
+
+    private function getVehicleFixtureForAction(string $type): Vehicle
+    {
+        return $this->getVehicleFixtureForPermissionTest($type, true);
     }
 }
