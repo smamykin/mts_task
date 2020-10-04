@@ -53,7 +53,7 @@ class InActionPermissionTest extends AbstractActionPermissionTestCase
     {
         $number = uniqid();
         $vehicleRepository = $this->getVehicleRepository(null, $number);
-        $objectManager = $this->getObjectManager($vehicleRepository, $this->createMock(VisitRepository::class));
+        $objectManager = $this->getObjectManager($vehicleRepository);
 
         $obj = new InActionPermission($objectManager, new NullLogger());
 
@@ -66,7 +66,7 @@ class InActionPermissionTest extends AbstractActionPermissionTestCase
         $vehicle->setIsActive(false);
 
         $vehicleRepository = $this->getVehicleRepository($vehicle, $vehicle->getNumber());
-        $objectManager = $this->getObjectManager($vehicleRepository, $this->createMock(VisitRepository::class));
+        $objectManager = $this->getObjectManager($vehicleRepository);
 
         $obj = new InActionPermission($objectManager, new NullLogger());
 

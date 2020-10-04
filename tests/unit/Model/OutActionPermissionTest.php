@@ -3,7 +3,6 @@
 namespace App\Tests\unit\Model;
 
 use App\Model\OutActionPermission;
-use App\Repository\VisitRepository;
 use Psr\Log\NullLogger;
 
 class OutActionPermissionTest extends AbstractActionPermissionTestCase
@@ -12,7 +11,7 @@ class OutActionPermissionTest extends AbstractActionPermissionTestCase
     {
         $number = uniqid();
         $vehicleRepository = $this->getVehicleRepository(null, $number);
-        $objectManager = $this->getObjectManager($vehicleRepository, $this->createMock(VisitRepository::class));
+        $objectManager = $this->getObjectManager($vehicleRepository);
 
         $obj = new OutActionPermission($objectManager, new NullLogger());
 
@@ -25,7 +24,7 @@ class OutActionPermissionTest extends AbstractActionPermissionTestCase
         $vehicle->setIsActive(false);
 
         $vehicleRepository = $this->getVehicleRepository($vehicle, $vehicle->getNumber());
-        $objectManager = $this->getObjectManager($vehicleRepository, $this->createMock(VisitRepository::class));
+        $objectManager = $this->getObjectManager($vehicleRepository);
 
         $obj = new OutActionPermission($objectManager, new NullLogger());
 
