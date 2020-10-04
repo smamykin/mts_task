@@ -6,16 +6,17 @@ use App\Model\ActionPermissionFactory;
 use App\Model\InActionPermission;
 use App\Model\OutActionPermission;
 use App\ValueObject\ActionType;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class ActionPermissionFactoryTest extends TestCase
 {
     public function testCreateInActionPermission()
     {
-        /** @var ObjectManager $em */
-        $em = $this->createMock(ObjectManager::class);
-        $obj = new ActionPermissionFactory($em);
+        /** @var EntityManagerInterface $em */
+        $em = $this->createMock(EntityManagerInterface::class);
+        $obj = new ActionPermissionFactory($em, new NullLogger());
         $this->assertInstanceOf(
             InActionPermission::class,
             $obj->create(new ActionType(ActionType::IN))
@@ -23,9 +24,9 @@ class ActionPermissionFactoryTest extends TestCase
     }
     public function testCreateOutActionPermission()
     {
-        /** @var ObjectManager $em */
-        $em = $this->createMock(ObjectManager::class);
-        $obj = new ActionPermissionFactory($em);
+        /** @var EntityManagerInterface $em */
+        $em = $this->createMock(EntityManagerInterface::class);
+        $obj = new ActionPermissionFactory($em, new NullLogger());
         $this->assertInstanceOf(
             OutActionPermission::class,
             $obj->create(new ActionType(ActionType::OUT))
