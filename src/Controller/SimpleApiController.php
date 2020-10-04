@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Exception\ExceptionInterface;
+use App\Exception\PermissionException;
+use App\Model\ActionHandlerFactoryInterface;
 use App\Model\ActionPermissionFactoryInterface;
-use App\Service\GateActionHandlerInterface;
-use App\Service\GatePermissionInterface;
 use App\ValueObject\ActionType;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -67,42 +67,38 @@ class SimpleApiController extends AbstractController
     /**
      * @Route(
      *     "/action/{type}/{vehicleNumber}",
-     *      name="permission",
+     *      name="action",
      *      methods={"POST"},
      *      requirements={"type"="^\w+$","vehicleNumber"="^[\w\d]+$"})
      * )
      * @param $type
      * @param $vehicleNumber
-     * @param GatePermissionInterface $permission
-     * @param GateActionHandlerInterface $gateActionHandler
+     * @param ActionHandlerFactoryInterface $factory
      * @return JsonResponse
      */
-//    public function action($type, $vehicleNumber, GatePermissionInterface $permission, GateActionHandlerInterface $gateActionHandler)
-//    {
-//        try {
-//            $type = new ActionType($type);
-//            $result = $permission->has($type, $vehicleNumber);
-//            if (!$result) {
-//                return $this->json([
-//                    'payload' => ['message' => 'Нет прав на совершение действия',],
-//                ], 403);
-//            }
-//            $gateActionHandler->do($type, $vehicleNumber);
-//        } catch (ExceptionInterface $e) {
-//            return $this->json([
-//                'payload' => ['message' => $e->getMessage(),],
-//            ], 400);
-//        } catch (Exception $exception) {
-//            return $this->json([
-//                'payload' => ['message' => 'Сообщите о проблеме в техническую поддержку.',],
-//            ], 500);
-//        }
-//
-//        return $this->json([
-//            'payload' => [
-//                'type' => $type,
-//                'result' => true,
-//            ],
-//        ], 200);
-//    }
+    public function action($type, $vehicleNumber, ActionHandlerFactoryInterface $factory)
+    {
+        try {
+            $factory->create(new ActionType($type))->do($vehicleNumber);
+        } catch (PermissionException $e) {
+            return $this->json([
+                'payload' => ['message' => $e->getMessage(),],
+            ], 403);
+        } catch (ExceptionInterface $e) {
+            return $this->json([
+                'payload' => ['message' => $e->getMessage(),],
+            ], 400);
+        } catch (Exception $exception) {
+            return $this->json([
+                'payload' => ['message' => 'Сообщите о проблеме в техническую поддержку.',],
+            ], 500);
+        }
+
+        return $this->json([
+            'payload' => [
+                'type' => $type,
+                'result' => true,
+            ],
+        ], 200);
+    }
 }
