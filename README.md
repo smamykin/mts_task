@@ -191,8 +191,8 @@ POST `/vehicle/:vehicleNumber/last-visit` 200, 404
 
 ### Число занятых мест.
 Число занятых мест вывел под заголовком списка всех посещений `/visit/` 
-![alt text](https://github.com/smamykin/project_j3__proto/blob/main/readme_assets/vehicle_list.jpg?raw=true)
+![alt text](https://github.com/smamykin/project_j3__proto/blob/main/readme_assets/vehicle_list.png?raw=true)
 
 ### История посещения
 Добавил список посещений конкретного ТС на страницу детальной информации этого ТС.
-![alt text](https://github.com/smamykin/project_j3__proto/blob/main/readme_assets/image.jpg?raw=true)
+![alt text](https://github.com/smamykin/project_j3__proto/blob/main/readme_assets/concreate_vehicle.png?raw=true)
