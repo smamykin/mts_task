@@ -123,7 +123,7 @@ GET `/vehicle/:vehicleNumber/visits` 200, 204
   ]
 }
 ```
-POST `/vehicle/:vehicleNumber/visits` 200, 204  
+POST `/vehicle/:vehicleNumber/visits` 200, 404  
 Сохранение "посещения", тело запроса может содержать только один параметр `closed_at` в формате `Y-m-d H:i:s`: 
 
 ```json
