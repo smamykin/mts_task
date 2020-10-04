@@ -26,15 +26,6 @@ class RestApiTest extends WebTestCase
      */
     private $em;
 
-    /**
-     * @param $newId
-     * @return mixed
-     */
-    public function getVisitById($newId)
-    {
-        return $this->em->getRepository(Visit::class)->find($newId);
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -223,5 +214,14 @@ class RestApiTest extends WebTestCase
         return $this->em
             ->getRepository(Visit::class)
             ->findLastOfVehicle($vehicle);
+    }
+
+    /**
+     * @param $newId
+     * @return mixed
+     */
+    private function getVisitById($newId)
+    {
+        return $this->em->getRepository(Visit::class)->find($newId);
     }
 }
