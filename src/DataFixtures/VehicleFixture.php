@@ -18,6 +18,8 @@ class VehicleFixture extends Fixture
     private const FOR_VEHICLE_VISITS = 'y004yy777';
     private const VEHICLE_PREFIX_FOR_LIST = 'y005yy77';
     private const VEHICLE_COUNT_FOR_LIST = 10;
+    private const FOR_ACTION_IN = 'a001yy77';
+    private const FOR_ACTION_OUT = 'a002yy77';
 
     /**
      * @return string
@@ -62,13 +64,38 @@ class VehicleFixture extends Fixture
         return $set[(string)$param][(int)$hasPermission];
     }
 
+    public static function getVehicleNumbersForAction(ActionType $type)
+    {
+        $map = [
+            ActionType::IN => self::FOR_ACTION_IN,
+            ActionType::OUT => self::FOR_ACTION_OUT,
+        ];
+
+        return $map[(string)$type];
+    }
+
     public function load(ObjectManager $manager)
     {
         $this->loadVehicleForPermissionCheck($manager);
         $this->loadVehicleForGetVehicleVisits($manager);
         $this->loadVehicles($manager);
+        $this->loadVehicleForAction($manager);
 
         $manager->flush();
+    }
+    private function loadVehicleForAction(ObjectManager $manager): void
+    {
+        $obj = new Vehicle();
+        $obj->setIsActive(true);
+        $obj->setNumber(self::FOR_ACTION_IN);
+        $manager->persist($obj);
+
+        $obj = new Vehicle();
+        $obj->setIsActive(true);
+        $obj->setNumber(self::FOR_ACTION_OUT);
+        $visit = new Visit();
+        $visit->setVehicle($obj);
+        $manager->persist($visit);
     }
 
     private function loadVehicleForPermissionCheck(ObjectManager $manager): void
