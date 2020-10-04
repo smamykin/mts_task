@@ -39,14 +39,14 @@ class SimpleApiTest extends WebTestCase
         $this->client->request('GET', "/api-simple/v0.1/permission/{$type}/{$vehicle->getNumber()}");
 
         $this->assertResponseStatusCodeSame(200);
-        $this->assertSame($this->client->getResponse()->getContent(), json_encode(
+        $this->assertSame(json_encode(
             [
                 'payload' => [
                     'type' => $type,
                     'permission' => true,
                 ],
             ]
-        ));
+        ), $this->client->getResponse()->getContent());
     }
 
     /**
@@ -79,15 +79,15 @@ class SimpleApiTest extends WebTestCase
     {
         $vehicle = $this->getVehicleFixtureForAction($type);
 
-        $this->client->request('GET', "/api-simple/v0.1/action/{$type}/{$vehicle->getNumber()}");
+        $this->client->request('POST', "/api-simple/v0.1/action/{$type}/{$vehicle->getNumber()}");
 
         $this->assertResponseStatusCodeSame(200);
-        $this->assertSame($this->client->getResponse()->getContent(), json_encode([
+        $this->assertSame(json_encode([
             'payload' => [
                 'type' => $type,
                 'result' => true,
             ],
-        ]));
+        ]), $this->client->getResponse()->getContent());
     }
 
     public function providerActionType(): array
@@ -109,6 +109,8 @@ class SimpleApiTest extends WebTestCase
 
     private function getVehicleFixtureForAction(string $type): Vehicle
     {
-        return $this->getVehicleFixtureForPermissionTest($type, true);
+        return $this->em
+            ->getRepository(Vehicle::class)
+            ->findOneByNumber(VehicleFixture::getVehicleNumbersForAction(new ActionType($type)));
     }
 }
