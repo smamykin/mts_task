@@ -8,6 +8,10 @@ use App\ValueObject\ActionType;
 use DateTimeImmutable;
 use LogicException;
 
+/**
+ * Фиксация "выезда" транспортного средства на паркинг.
+ * @see ActionHandlerInterface
+ */
 class OutActionHandler extends AbstractActionHandler
 {
     protected function doAction(string $vehicleNumber): void

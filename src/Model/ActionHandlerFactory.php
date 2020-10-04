@@ -6,6 +6,9 @@ use App\Exception\OutOfBoundsException;
 use App\ValueObject\ActionType;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * @see ActionHandlerFactoryInterface
+ */
 class ActionHandlerFactory implements ActionHandlerFactoryInterface
 {
     /**

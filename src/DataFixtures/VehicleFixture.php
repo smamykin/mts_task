@@ -9,6 +9,10 @@ use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Для генерации предопределенных фикстур.
+ * Для загрузки используется консольная комманда `doctrine:fixtures:load`
+ */
 class VehicleFixture extends Fixture
 {
     private const FOR_PERMISSION_NUMBER_CAN_IN = 'y000yy777';

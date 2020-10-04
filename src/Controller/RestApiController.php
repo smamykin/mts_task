@@ -12,13 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class SimpleApiController
+ * Класс отвечает за предоставления API для
+ * - получения списка транспортных средств
+ * - получение и изменния посещения ТС
+ *
  * @package App\Controller
  * @Route("/api/v0.1")
  */
 class RestApiController extends AbstractController
 {
     /**
+     * Получения списка ТС.
+     *
      * @Route("/vehicles", name="api_vehicle_list", methods={"GET"})
      * @param VehicleRepository $repository
      * @return JsonResponse
@@ -34,6 +39,8 @@ class RestApiController extends AbstractController
     }
 
     /**
+     * Получение данных о ТС средстве по гос номеру.
+     *
      * @Route("/vehicle/{vehicleNumber}", name="api_vehicle_detail", methods={"GET"}, requirements={"vehicleNumber"="^[\w\d]+$"})
      * @param $vehicleNumber
      * @param VehicleRepository $vehicleRepository
@@ -50,6 +57,8 @@ class RestApiController extends AbstractController
     }
 
     /**
+     * Получение списка визитов ТС по гос номеру.
+     *
      * @Route("/vehicle/{vehicleNumber}/visits", name="api_vehicle_visits", methods={"GET"}, requirements={"vehicleNumber"="^[\w\d]+$"})
      * @param $vehicleNumber
      * @param VehicleRepository $vehicleRepository
@@ -70,6 +79,8 @@ class RestApiController extends AbstractController
     }
 
     /**
+     * Создание нового "посещения" для ТС.
+     *
      * @Route("/vehicle/{vehicleNumber}/visits", name="api_vehicle_new_visit", methods={"POST"}, requirements={"vehicleNumber"="^[\w\d]+$"})
      * @param $vehicleNumber
      * @param EntityManagerInterface $em
@@ -95,9 +106,7 @@ class RestApiController extends AbstractController
         $lastVisit = $vehicle->getVisits()->last();
         if ($lastVisit && empty($data['closed_at']) && empty($lastVisit->getClosedAt())) {
             return $this->json([
-                'payload' =>[
-                    'message' => 'Не возможно создать открытую запись для ТС: открытая запись уже создана.'
-                ]
+                'payload' => ['message' => 'Не возможно создать открытую запись для ТС: открытая запись уже создана.']
             ], 400);
         }
 
@@ -115,6 +124,8 @@ class RestApiController extends AbstractController
     }
 
     /**
+     * Обновление записи "посещения" ТС паркинга по гос номеру.
+     *
      * @Route("/vehicle/{vehicleNumber}/visit/{visit}", name="api_vehicle_edit_visit", methods={"POST"}, requirements={"vehicleNumber"="^[\w\d]+$"})
      * @param $vehicleNumber
      * @param Visit $visit
@@ -174,6 +185,8 @@ class RestApiController extends AbstractController
     }
 
     /**
+     * Получить последнее посещение паркинга ТС.
+     *
      * @Route("/vehicle/{vehicleNumber}/last-visit", name="api_vehicle_last-visit", methods={"GET"}, requirements={"vehicleNumber"="^[\w\d]+$"})
      * @param $vehicleNumber
      * @param VehicleRepository $vehicleRepository

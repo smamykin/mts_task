@@ -6,6 +6,9 @@ use App\Exception\PermissionException;
 use App\ValueObject\ActionType;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Абстрактный класс позволяет сократить дублирование при проверки прав на совершение ТС "действие"
+ */
 abstract class AbstractActionHandler implements ActionHandlerInterface
 {
     /**

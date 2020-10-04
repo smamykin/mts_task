@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
+ * CRUD контроллер для работы с 'посещениями' ТС в UI оператора.
  * @Route("/visit")
  */
 class VisitController extends AbstractController
@@ -42,6 +43,9 @@ class VisitController extends AbstractController
     }
 
     /**
+     * Для возможности "вложить" шаблон с числом занятых мест в любой другой шаблон по необходимости
+     * без расположения логики по получени числа на сторое Представления.
+     *
      * @param VisitRepository $visitRepository
      * @return Response
      */

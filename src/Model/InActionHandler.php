@@ -7,6 +7,10 @@ use App\Entity\Visit;
 use App\ValueObject\ActionType;
 use LogicException;
 
+/**
+ * Фиксация "заезда" транспортного средства на паркинг.
+ * @see ActionHandlerInterface
+ */
 class InActionHandler extends AbstractActionHandler
 {
     protected function doAction(string $vehicleNumber): void

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
+ * CRUD контроллер для работы с ТС в UI оператора
+ *
  * @Route("/vehicle")
  */
 class VehicleController extends AbstractController

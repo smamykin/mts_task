@@ -14,7 +14,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class SimpleApiController
+ * Упрощенное api для получения и обновления информации:
+ * - можно ли открыть шлагбаум для ТС по гос номеру.
+ * - зафиксировать "заезд" или "выезд" ТС с паркинга.
  * @package App\Controller
  * @Route("/api-simple/v0.1")
  */
@@ -25,12 +27,18 @@ class SimpleApiController extends AbstractController
      */
     private $logger;
 
+    /**
+     * SimpleApiController constructor.
+     * @param LoggerInterface $logger
+     */
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
     /**
+     * Экшен позволяет получить информацию "можно ли открыть шлагбаум для заезда/выезда ТС"
+     *
      * @Route(
      *     "/permission/{type}/{vehicleNumber}",
      *      name="permission",
@@ -42,7 +50,7 @@ class SimpleApiController extends AbstractController
      * @param ActionPermissionFactoryInterface $factory
      * @return JsonResponse
      */
-    public function permission($type, $vehicleNumber, ActionPermissionFactoryInterface $factory)
+    public function permission($type, $vehicleNumber, ActionPermissionFactoryInterface $factory): JsonResponse
     {
         try {
             $result = $factory->create(new ActionType($type))->has($vehicleNumber);
@@ -65,6 +73,8 @@ class SimpleApiController extends AbstractController
     }
 
     /**
+     * Экшен позволяет зафиксировать информацию о заезде/выезде ТС.
+     *
      * @Route(
      *     "/action/{type}/{vehicleNumber}",
      *      name="action",
@@ -76,7 +86,7 @@ class SimpleApiController extends AbstractController
      * @param ActionHandlerFactoryInterface $factory
      * @return JsonResponse
      */
-    public function action($type, $vehicleNumber, ActionHandlerFactoryInterface $factory)
+    public function action($type, $vehicleNumber, ActionHandlerFactoryInterface $factory): JsonResponse
     {
         try {
             $factory->create(new ActionType($type))->do($vehicleNumber);

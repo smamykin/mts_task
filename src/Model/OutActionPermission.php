@@ -7,6 +7,10 @@ use App\Entity\Visit;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Позволяет узнать может ли ТС выехать c паркинга.
+ * @see ActionPermissionInterface
+ */
 class OutActionPermission implements ActionPermissionInterface
 {
     /**

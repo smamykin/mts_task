@@ -7,6 +7,9 @@ use App\ValueObject\ActionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @see ActionPermissionFactoryInterface
+ */
 class ActionPermissionFactory implements ActionPermissionFactoryInterface
 {
     /**
