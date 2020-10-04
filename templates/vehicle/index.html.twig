@@ -24,7 +24,7 @@
                     <td>
                         <a href="{{ path('vehicle_show', {'id': vehicle.id}) }}">{{ "show"|trans }}</a>
                         <a href="{{ path('vehicle_edit', {'id': vehicle.id}) }}">{{ "edit"|trans }}</a>
-                        <a href="{{ path('visit_index_by_vehicle', {'vehicleId': vehicle.id}) }}">{{ "list only for this vehicle"|trans }}</a>
+                        <a href="{{ path('visit_index_by_vehicle', {'vehicle': vehicle.id}) }}">{{ "list only for this vehicle"|trans }}</a>
                     </td>
                 </tr>
             {% else %}
