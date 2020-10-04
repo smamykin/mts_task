@@ -6,6 +6,7 @@ use App\DataFixtures\VehicleFixture;
 use App\Entity\Vehicle;
 use App\Entity\Visit;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\Persistence\ObjectManager;
 use Generator;
 use OutOfRangeException;
@@ -37,7 +38,7 @@ class RestApiTest extends WebTestCase
     public function testGetVehicles(): void
     {
         //test
-        $this->client->request('GET', "/vehicles");
+        $this->client->request('GET', "/api/v0.1/vehicles");
 
         //check
         $this->assertResponseStatusCodeSame(200);
@@ -58,7 +59,7 @@ class RestApiTest extends WebTestCase
     public function testGetVehicle(string $vehicleNumber): void
     {
         $vehicle = $this->em->getRepository(Vehicle::class)->findOneByNumber($vehicleNumber);
-        $this->client->request('GET', "/vehicle/{$vehicle->getNumber()}");
+        $this->client->request('GET', "/api/v0.1/vehicle/{$vehicle->getNumber()}");
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertSame(
@@ -73,12 +74,12 @@ class RestApiTest extends WebTestCase
     public function testGetVehicleVisits(): void
     {
         $vehicle = $this->getVehicleForVisitsTests();
-        $this->client->request('GET', "/vehicle/{$vehicle->getNumber()}/visits");
+        $this->client->request('GET', "/api/v0.1/vehicle/{$vehicle->getNumber()}/visits");
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertSame(
             $this->getSerializer()->serialize(
-                ['payload' => $this->getAllVisitsByVehicle($vehicle)],
+                ['payload' => $vehicle->getVisits()],
                 'json'
             ),
             $this->client->getResponse()->getContent()
@@ -88,7 +89,7 @@ class RestApiTest extends WebTestCase
     public function testPostVehicleVisit(): Visit
     {
         $vehicle = $this->getVehicleForVisitsTests();
-        $this->client->request('GET', "/vehicle/{$vehicle->getNumber()}/visits");
+        $this->client->request('POST', "/api/v0.1/vehicle/{$vehicle->getNumber()}/visits",['payload' =>[]]);
 
         $this->assertResponseStatusCodeSame(200);
 
@@ -111,16 +112,20 @@ class RestApiTest extends WebTestCase
 
     /**
      * @depends testPostVehicleVisit
-     * @param Visit $visit
      */
-    public function testPatchVehicleVisit(Visit $visit): void
+    public function testPatchVehicleVisit(): void
     {
+        $visit = $this->testPostVehicleVisit(); // чтобы появилась запись которую можно отредактировать
+        if (empty($visit)) {
+            $this->fail('не удалось создать запись для редактирования.');
+        }
+
         $vehicle = $this->getVehicleForVisitsTests();
         $now = new DateTimeImmutable();
         $this->client->request(
             'POST',
-            "/vehicle/{$vehicle->getNumber()}/visit/{$visit->getId()}",
-            ['closed_at' => $now->format(self::JSON_DATE_FORMAT)]
+            "/api/v0.1/vehicle/{$vehicle->getNumber()}/visit/{$visit->getId()}",
+            ['payload'=> ['closed_at' => $now->format(self::JSON_DATE_FORMAT)]]
         );
 
         $this->assertResponseStatusCodeSame(200);
@@ -132,27 +137,25 @@ class RestApiTest extends WebTestCase
         $newVisit = $this->getVisitById($newId);
 
         $this->assertSame(
-            $this->getSerializer()->serialize(
-                ['payload' => $newVisit],
-                'json'
-            ),
+            $this->getSerializer()->serialize(['payload' => $newVisit], 'json'),
             $this->client->getResponse()->getContent()
         );
 
-        $this->assertSame($now, $newVisit->getClosedAt());
+        $this->assertInstanceOf(DateTimeInterface::class, $newVisit->getClosedAt());
+        $this->assertSame(
+            $now->format(self::JSON_DATE_FORMAT),
+            $newVisit->getClosedAt()->format(self::JSON_DATE_FORMAT)
+        );
     }
 
     public function testGetLastVisit()
     {
         $vehicle = $this->getVehicleForVisitsTests();
-        $this->client->request('GET', "/vehicle/{$vehicle->getNumber()}/last-visit");
+        $this->client->request('GET', "/api/v0.1/vehicle/{$vehicle->getNumber()}/last-visit");
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertSame(
-            $this->getSerializer()->serialize(
-                ['payload' => $this->getLastVisitOfVehicle($vehicle)],
-                'json'
-            ),
+            $this->getSerializer()->serialize(['payload' => $vehicle->getVisits()->last()], 'json'),
             $this->client->getResponse()->getContent()
         );
     }
@@ -189,17 +192,6 @@ class RestApiTest extends WebTestCase
     }
 
     /**
-     * @param Vehicle $vehicle
-     * @return Visit[]
-     */
-    private function getAllVisitsByVehicle(Vehicle $vehicle): array
-    {
-        return $this->em
-            ->getRepository(Visit::class)
-            ->findAllByVehicle($vehicle);
-    }
-
-    /**
      * @return Vehicle
      */
     private function getVehicleForVisitsTests(): Vehicle
@@ -207,13 +199,6 @@ class RestApiTest extends WebTestCase
         $vehicleNumber = VehicleFixture::getFixtureIdForGetVehicleVisits();
 
         return $this->em->getRepository(Vehicle::class)->findOneByNumber($vehicleNumber);
-    }
-
-    private function getLastVisitOfVehicle($vehicle)
-    {
-        return $this->em
-            ->getRepository(Visit::class)
-            ->findLastOfVehicle($vehicle);
     }
 
     /**
