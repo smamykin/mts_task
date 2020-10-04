@@ -42,6 +42,17 @@ class VisitController extends AbstractController
     }
 
     /**
+     * @param VisitRepository $visitRepository
+     * @return Response
+     */
+    public function openedVisitsCount(VisitRepository $visitRepository): Response
+    {
+        return $this->render('visit/_count.html.twig', [
+            'count' =>  $visitRepository->count(['closed_at' => null]),
+        ]);
+    }
+
+    /**
      * @Route("/new", name="visit_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response

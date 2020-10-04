@@ -6,6 +6,8 @@
     <div class="container">
         <h1>{{ "Index visit"|trans }}</h1>
 
+        <h2>{{ "opened current"|trans }}: {{ render(controller('App\\Controller\\VisitController::openedVisitsCount')) }}</h2>
+
         <table class="table">
             <thead>
                 <tr>
