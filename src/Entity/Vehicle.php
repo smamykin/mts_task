@@ -32,7 +32,7 @@ class Vehicle
 
     /**
      * @ORM\OneToMany(targetEntity=Visit::class, mappedBy="vehicle", orphanRemoval=true)
-     * @ORM\OrderBy({"craeted_at" = "DESC", "id" = "DESC"})
+     * @ORM\OrderBy({"created_at" = "DESC", "id" = "DESC"})
      */
     private $visits;
 
