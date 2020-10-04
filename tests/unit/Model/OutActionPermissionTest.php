@@ -41,7 +41,7 @@ class OutActionPermissionTest extends AbstractActionPermissionTestCase
 
         $obj = new OutActionPermission($objectManager, new NullLogger());
 
-        $this->assertTrue($obj->has($vehicle->getNumber()));
+        $this->assertFalse($obj->has($vehicle->getNumber()));
     }
 
     public function testHasClosedLastVisit()
@@ -55,7 +55,7 @@ class OutActionPermissionTest extends AbstractActionPermissionTestCase
 
         $obj = new OutActionPermission($objectManager, new NullLogger());
 
-        $this->assertTrue($obj->has($vehicle->getNumber()));
+        $this->assertFalse($obj->has($vehicle->getNumber()));
     }
 
     public function testHasOpenedLastVisit()
