@@ -29,6 +29,19 @@ class VisitController extends AbstractController
     }
 
     /**
+     * @Route("/index_by_vehicle/{vehicle}", requirements={"vehicle"="^\d+$"}, name="visit_index_by_vehicle")
+     * @param Vehicle $vehicle
+     * @param VisitRepository $visitRepository
+     * @return Response
+     */
+    public function indexByVehicleId(Vehicle $vehicle, VisitRepository $visitRepository): Response
+    {
+        return $this->render('visit/index.html.twig', [
+            'visits' => $visitRepository->findByVehicle($vehicle),
+        ]);
+    }
+
+    /**
      * @Route("/new", name="visit_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response

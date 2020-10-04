@@ -29,4 +29,8 @@
 
         {{ include('vehicle/_delete_form.html.twig') }}
     </div>
+    {{ render(controller(
+        'App\\Controller\\VisitController::indexByVehicleId',
+        { 'vehicle': vehicle }
+    )) }}
 {% endblock %}
