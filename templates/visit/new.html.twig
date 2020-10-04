@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "New Visit"|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>{{ "Create new Visit"|trans }}</h1>
+
+        {{ include('visit/_form.html.twig') }}
+
+        <a href="{{ path('visit_index') }}">{{ "back to list"|trans }}</a>
+    </div>
+{% endblock %}

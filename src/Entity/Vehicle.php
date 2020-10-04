@@ -41,6 +41,11 @@ class Vehicle
         $this->visits = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getNumber();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

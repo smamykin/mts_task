@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "Visit"|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>{{ "Visit"|trans }}</h1>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ visit.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Created at"|trans }}</th>
+                    <td>{{ visit.createdAt ? visit.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>{{ "Closed at"|trans }}</th>
+                    <td>{{ visit.closedAt ? visit.closedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="{{ path('visit_index') }}">{{ "back to list"|trans }}</a>
+
+        <a href="{{ path('visit_edit', {'id': visit.id}) }}">{{ "edit"|trans }}</a>
+
+        {{ include('visit/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

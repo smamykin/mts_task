@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "Edit Visit"|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>{{ "Edit Visit"|trans }}</h1>
+
+        {{ include('visit/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a href="{{ path('visit_index') }}">{{ "back to list"|trans }}</a>
+
+        {{ include('visit/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

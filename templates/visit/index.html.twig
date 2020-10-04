@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ "Index visit"|trans }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>{{ "Index visit"|trans }}</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{{ "Vehicle Number"|trans }}</th>
+                    <th>{{ "Created at"|trans }}</th>
+                    <th>{{ "Closed at"|trans }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for visit in visits %}
+                <tr>
+                    <td><a href="{{ path('vehicle_show', {'id': visit.vehicle.id}) }}">{{ visit.vehicle.number }}</a></td>
+                    <td>{{ visit.createdAt ? visit.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ visit.closedAt ? visit.closedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>
+                        <a href="{{ path('visit_show', {'id': visit.id}) }}">{{ "show"|trans }}</a>
+                        <a href="{{ path('visit_edit', {'id': visit.id}) }}">{{ "edit"|trans }}</a>
+                        {% if app.request.get('_route') != 'visit_index_by_vehicle' %}
+                            <a href="{{ path('visit_index_by_vehicle', {'vehicle': visit.vehicle.id}) }}">{{ "list only for this vehicle"|trans }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">{{ "no records found"|trans }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('visit_new') }}">{{ "Create new"|trans }}</a>
+    </div>
+{% endblock %}
